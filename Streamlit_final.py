@@ -4,6 +4,8 @@ import pyarrow.parquet as pq
 import plotly.express as px
 import seaborn as sns
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('TkAgg')
 
 
 # Load parquet file
@@ -14,7 +16,7 @@ def load_parquet(file):
 file = st.file_uploader("Upload your parquet file", type="parquet")
 if file is not None:
     df = load_parquet(file)
-
+    matplotlib.use('TkAgg')
     # Visualize NaN values
     st.subheader("NaN values visualization")
     fig = px.imshow(pd.isna(df), width=800, title="NaN values in the dataset")
@@ -22,7 +24,7 @@ if file is not None:
     st.plotly_chart(fig)
 
     pd.crosstab(df.vidsobst,df.fr_group,margins=True).style.background_gradient(cmap='summer_r')
-    sns.displot(data=df, x='vidsobst')
+    st.pyplot(sns.displot(data=df, x='vidsobst'))
 
     column_name = 'prev_distance'
     figure = plt.figure(figsize=(10, 5))
@@ -30,7 +32,9 @@ if file is not None:
     plt.xlabel(column_name)
     plt.ylabel('Frequency')
     plt.title(f'Histogram of {column_name} with NaN values')
-    plt.show()
+    st.pyplot(plt)
+    #plt.show()
 
     sns.displot(df['prev_date_arrival'], kde=False)
-    plt.show()
+    st.pyplot(plt)
+    #plt.show()
